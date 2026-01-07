@@ -644,7 +644,7 @@ Services encapsulate complex operations and external integrations:
 - **index.js** - Main CorpBase export logic
 
 **PIF Export Service** (`pifExportService.js`):
-- Polymorphic Information File (PIF) export for scientific data
+- Product Information File (PIF) export for regulatory and product data
 
 **Data Parsing Services:**
 - **csvParserUtils.js** - CSV parsing utilities

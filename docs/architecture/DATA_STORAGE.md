@@ -102,6 +102,14 @@ The NPDI Portal uses the following MongoDB collections:
 | `producthierarchies` | ProductHierarchy | SIAL product hierarchy classifications |
 | `weightmatrices` | WeightMatrix | Package size to weight conversion data |
 | `permissions` | Permission | Role-based access control definitions |
+| `corpbasedefinitions` | CorpBaseDefinitions | CorpBase product field definitions and requirements |
+| `attributefixedtexts` | AttributeFixedText | Fixed text/descriptions for product attributes |
+
+### User Feedback
+
+| Collection | Model | Purpose |
+|------------|-------|---------|
+| `feedback` | Feedback | User feedback, bug reports, and feature requests |
 
 ---
 
@@ -660,6 +668,14 @@ const cleanTicketData = (ticketData) => {
 | `server/models/SystemSettings.js` | Global system settings |
 | `server/models/ApiKey.js` | API key management |
 | `server/models/ParserConfiguration.js` | Quality parser knowledge base |
+| `server/models/Feedback.js` | User feedback collection |
+| `server/models/CorpBaseDefinitions.js` | CorpBase field definitions |
+| `server/models/AttributeFixedText.js` | Fixed text for product attributes |
+| `server/models/PlantCode.js` | Manufacturing plant codes |
+| `server/models/BusinessLine.js` | Business line definitions |
+| `server/models/ProductHierarchy.js` | Product hierarchy classifications |
+| `server/models/WeightMatrix.js` | Package size to weight conversion |
+| `server/models/Permission.js` | Role-based access control |
 | `server/models/index.js` | Barrel export for all models |
 
 ### Discriminators (Template-Based)
@@ -700,5 +716,5 @@ const cleanTicketData = (ticketData) => {
 
 ---
 
-**Last Updated:** 2025-12-08
+**Last Updated:** 2026-01-07
 **Maintained by:** NPDI Development Team
