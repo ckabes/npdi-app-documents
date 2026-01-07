@@ -3,8 +3,8 @@
 ## Document Information
 
 **Application:** MilliporeSigma NPDI Application
-**Version:** 1.2.0
-**Last Updated:** 2025-12-08
+**Version:** 1.3.0
+**Last Updated:** 2026-01-07
 **Purpose:** Comprehensive architectural overview for stakeholders and technical teams
 
 ---
@@ -86,10 +86,11 @@ The NPDI application facilitates the interface between Product Managers and Prod
 │  │  Collections:                                              │ │
 │  │  - producttickets       - users              - permissions │ │
 │  │  - apikeys              - formconfigs        - templates   │ │
-│  │  - systemsettings       - userpreferences                  │ │
+│  │  - systemsettings       - userpreferences    - feedback    │ │
 │  │  - parserconfigurations - weightmatrices                   │ │
 │  │  - plantcodes           - businesslines                    │ │
-│  │  - producthierarchies                                      │ │
+│  │  - producthierarchies   - corpbasedefinitions              │ │
+│  │  - attributefixedtexts                                     │ │
 │  └────────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────────┘
                               ↕
@@ -112,18 +113,23 @@ The NPDI application facilitates the interface between Product Managers and Prod
 - **Validation:** express-validator 7.x
 - **HTTP Client:** Axios 1.13.x (for PubChem, Palantir, Azure OpenAI integrations)
 - **Data Parsing:** Apache Arrow 21.x (for Palantir binary data)
-- **Logging:** Custom logger with daily file rotation (zero dependencies)
+- **Excel Generation:** ExcelJS 4.x (for PDP Checklist and data exports)
+- **CSV Parsing:** CSV Parser 3.x
+- **Email:** Nodemailer 7.x (for notifications and alerts)
+- **File Upload:** Multer 2.x
+- **Encryption:** Built-in Node.js crypto (AES-256-GCM for API keys)
+- **Logging:** Winston-based structured logging with file rotation
 
 #### Frontend
-- **Framework:** React 18.x
-- **Router:** React Router DOM 6.x
-- **Build Tool:** Vite 6.x
+- **Framework:** React 19.x
+- **Router:** React Router DOM 7.x
+- **Build Tool:** Vite 7.x
 - **HTTP Client:** Axios 1.x
-- **Form Management:** React Hook Form
+- **Form Management:** React Hook Form 7.x
 - **UI Components:** Headless UI, Heroicons
-- **Styling:** Tailwind CSS 3.x
+- **Styling:** Tailwind CSS 4.x
 - **Notifications:** React Hot Toast 2.x
-- **Molecular Visualization:** RDKit-JS (client-side 2D structure rendering via CDN)
+- **Molecular Visualization:** RDKit-JS (client-side 2D structure rendering via npm package)
 
 #### Development Tools
 - **Process Manager:** Nodemon (server), Concurrently (parallel dev)
@@ -152,20 +158,35 @@ The Model layer defines the data structure and business rules using Mongoose sch
 - **Permission** - Role-based access control definitions
 - **ApiKey** - External API authentication credentials
 - **FormConfiguration** - Dynamic form field configurations
-- **SystemSettings** - Application-wide configuration
+- **SystemSettings** - Application-wide configuration (integrations, PubChem, Teams, Langdock, Palantir)
 - **UserPreferences** - User-specific settings
 - **TicketTemplate** - Versioned ticket templates with semantic versioning
 - **WeightMatrix** - Package size to weight conversion for SKU variants
 - **ParserConfiguration** - Quality spec parser knowledge base
+- **Feedback** - User feedback collection and management
+- **CorpBaseDefinitions** - CorpBase product data requirements and field definitions
+- **AttributeFixedText** - Fixed text/descriptions for product attributes
+- **PlantCode** - Manufacturing facility codes and locations
+- **BusinessLine** - Product business line definitions
+- **ProductHierarchy** - Product classification hierarchy (SBU, GPH, Product Line)
 
 **Discriminator Models (Template-Specific):**
 - **ChemicalTicket** - Chemistry template-specific fields (DM1-CHEM)
 - **BiologicTicket** - Biologics template-specific fields (AS6-BIOLOGIC)
 
-**Shared Schemas:**
+**Shared Schemas** (`server/models/schemas/`):
 - **commentSchema** - Ticket comments with user attribution
 - **statusHistorySchema** - Status change audit trail
-- **skuVariantSchema** - SKU variant definitions
+- **skuVariantSchema** - SKU variant definitions (BULK, PREPACK, etc.)
+- **chemicalPropertiesSchema** - CAS number, molecular weight, formula, SMILES, InChI
+- **biologicalPropertiesSchema** - Gene expression, cell types, biological properties
+- **qualitySchema** - MQ quality levels and test attributes
+- **hazardClassificationSchema** - GHS hazard categories, signal words, pictograms
+- **compositionSchema** - Compound composition data with percentages
+- **physicalPropertiesSchema** - Melting point, boiling point, density, flash point
+- **storageShippingSchema** - Storage conditions and shipping information
+- **regulatoryInfoSchema** - Regulatory classification and approvals
+- **applicationsSchema** - Product applications and use cases
 
 **Responsibilities:**
 - Define data schemas with strict type validation
@@ -226,15 +247,26 @@ Controllers contain business logic and orchestrate operations between routes, mo
 - **devProfileController** - Development profile selection
 - **productHierarchyController** - Product hierarchy management
 - **parserConfigController** - Quality spec parser configuration
+- **feedbackController** - User feedback collection and management
+- **mongoExplorerController** - MongoDB database explorer (admin tool)
+
+**Lookup Table Controllers (CRUD operations):**
+- **plantCodeController** - Plant code CRUD operations
+- **businessLineController** - Business line CRUD operations
+- **corpbaseDefinitionsController** - CorpBase definitions CRUD
+- **attributeFixedTextController** - Fixed text management
+- **weightMatrixController** - Weight matrix management
 
 **Modular Product Controllers** (`server/controllers/products/`):
 - **ticketCRUDController** - Create, read, update, delete operations
-- **integrationController** - External integrations (PubChem, SAP/Palantir)
+- **integrationController** - External integrations (PubChem, SAP/Palantir, AI content generation)
 - **dashboardController** - Dashboard statistics and analytics
-- **exportController** - Excel export functionality (PDP, PIF)
+- **exportController** - Excel export functionality (PDP, PIF, SAP Loader, CorpBase Loader)
 - **helpers** - Shared helper functions for product controllers
 
 **Note:** Permission management is handled directly in `server/routes/permissions.js`.
+
+**Pattern:** Uses CRUD factory pattern (`server/utils/crudControllerFactory.js`) for standardized lookup table operations.
 
 **Responsibilities:**
 - Receive requests from routes
@@ -475,15 +507,27 @@ The main application entry point that:
 
 Routes define API endpoints and attach middleware/validation:
 
-- **products.js** - Product ticket endpoints
+**Core Routes:**
+- **products.js** - Product ticket endpoints (CRUD, status changes, comments, exports)
 - **formConfig.js** - Dynamic form configuration
 - **users.js** - User management
 - **permissions.js** - Permission management
-- **systemSettings.js** - System configuration
+- **systemSettings.js** - System configuration (integrations, API settings)
 - **userPreferences.js** - User preferences
 - **templates.js** - Ticket templates
 - **admin.js** - Administrative functions
 - **ticketApi.js** - External API (v1)
+- **metrics.js** - Dashboard metrics endpoints
+- **feedback.js** - User feedback submission and management
+
+**Lookup Table Routes:**
+- **plantCodes.js** - Plant code lookup endpoints
+- **businessLines.js** - Business line lookup endpoints
+- **productHierarchy.js** - Product hierarchy endpoints
+- **parserConfig.js** - Parser config endpoints
+- **corpbaseDefinitions.js** - CorpBase definitions endpoints
+- **attributeFixedText.js** - Attribute fixed text endpoints
+- **weightMatrix.js** - Weight matrix endpoints
 
 **Example Route Definition:**
 ```javascript
@@ -510,6 +554,27 @@ router.post('/', [
 - API key validation with database lookup
 - IP whitelist enforcement
 - Usage tracking
+
+#### 4.1.4a Configuration
+
+**Location:** `server/config/`
+
+**Database Configuration** (`database.js`):
+- MongoDB connection setup and options
+- Connection pool management
+- Error handling for database connectivity
+
+**SAP Mappings** (`sapMappings/`):
+- `qualityMapping.js` - Quality level mappings (MQ1-MQ5 to SAP codes)
+- `sbuMapping.js` - SBU code mappings
+- `tempMapping.js` - Temperature range mappings (storage/shipping)
+- `uomMapping.js` - Unit of measure mappings
+- `index.js` - Main mappings export
+
+**Purpose:**
+- Centralized SAP field mapping configuration
+- Consistent data transformation for SAP exports
+- Easy maintenance of SAP integration rules
 
 #### 4.1.4 Services
 
@@ -570,6 +635,23 @@ Services encapsulate complex operations and external integrations:
 - Filtered export capabilities
 - Batch export operations
 
+**SAP Export Services** (`sapExport/`):
+- **sapLoaderGenerator.js** - SAP Loader format generation
+- **index.js** - Main SAP export logic and field mapping
+
+**CorpBase Export Services** (`corpbaseExport/`):
+- **corpbaseLoaderGenerator.js** - CorpBase Loader format generation
+- **index.js** - Main CorpBase export logic
+
+**PIF Export Service** (`pifExportService.js`):
+- Polymorphic Information File (PIF) export for scientific data
+
+**Data Parsing Services:**
+- **csvParserUtils.js** - CSV parsing utilities
+- **attributeFixedTextParser.js** - Parsing fixed text definitions
+- **corpbaseDefinitionsParser.js** - Parsing CorpBase requirements
+- **productHierarchyParser.js** - Parsing product hierarchy data
+
 **Cache Service** (`cacheService.js`):
 - In-memory LRU (Least Recently Used) cache with TTL-based expiration
 - Namespace-based key organization for easy invalidation
@@ -607,6 +689,31 @@ Services encapsulate complex operations and external integrations:
 - `ensureDefaultSBU()` - Sets default SBU if missing
 - `ensureDefaultSKU()` - Creates default SKU variant
 
+**CRUD Controller Factory** (`crudControllerFactory.js`):
+- Factory for generating standardized CRUD controller methods
+- Used by PlantCode, BusinessLine, ProductHierarchy, and similar lookup table controllers
+- Standardizes getAll, getOne, create, update, delete operations
+- Configurable options for entity name, logging, field population
+
+**Encryption** (`encryption.js`):
+- AES-256-GCM encryption/decryption utilities
+- Used for API keys and integration credentials (Langdock, Palantir)
+- Secure key generation and storage
+
+**Submission Validator** (`submissionValidator.js`):
+- Validates ticket submission requirements based on template
+- Checks required fields
+- Validates field formats and values
+
+**Error Handler** (`errorHandler.js`):
+- Centralized error handling middleware
+- Consistent error response formatting
+
+**Logger** (`logger.js`):
+- Winston-based structured logging
+- File and console transports
+- Log rotation support
+
 ### 4.2 Frontend Components
 
 #### 4.2.1 Application Structure
@@ -633,39 +740,96 @@ Top-level route components representing application views:
 - `CreateTicket.jsx` - New ticket creation form
 - `TicketDetails.jsx` - Individual ticket view/edit
 - `TicketList.jsx` - Searchable ticket listing
+- `DraftsView.jsx` - View and manage draft tickets
 - `TestCAS.jsx` - CAS number testing utility (development only)
 
 **Administrative Pages:**
 - `ProfileSelection.jsx` - User role selection (development mode)
 - `UserPreferences.jsx` - User settings and preferences
+- `TemplateManager.jsx` - Ticket template management
+- `MongoDBExplorer.jsx` - MongoDB database explorer (admin tool)
+- `CollaborationsPage.jsx` - Manage ticket collaborations
+- `UserFeedbackPage.jsx` - View and manage user feedback
 
 #### 4.2.3 Reusable Components
 
 **Forms** (`client/src/components/forms/`):
 - `DynamicFormRenderer.jsx` - Renders forms based on configuration
 - `DynamicFormSection.jsx` - Generic section renderer
-- `DynamicBasicInfo.jsx` - Basic information section
-- `DynamicCustomSections.jsx` - Custom dynamic sections
-- `ChemicalPropertiesForm.jsx` - Chemical data input
+- `ChemicalPropertiesForm.jsx` - Chemical data input with molecule viewer
+- `BiologicalPropertiesForm.jsx` - Biological product properties
 - `SKUVariantsForm.jsx` - SKU management interface
-- `CorpBaseDataForm.jsx` - Marketing/website content
+- `CorpBaseDataForm.jsx` - Marketing/website content with AI generation
 - `PricingCalculationForm.jsx` - Automated pricing calculator
-- `QualitySpecificationsForm.jsx` - Quality attributes
+- `QualitySpecificationsForm.jsx` - Quality attributes and parser
+- `ProductTicketForm.jsx` - Main ticket form wrapper
+- `SectionNavigator.jsx` - Form section navigation
+- `SearchableAutocomplete.jsx` - Reusable autocomplete component
+- `BusinessLineAutocomplete.jsx` - Business line selector
+- `PlantCodeAutocomplete.jsx` - Plant code selector
+- `ProductHierarchySelector.jsx` - Product hierarchy selection
+- `UNSPSCSelector.jsx` - UNSPSC code selection
 
 **Admin Components** (`client/src/components/admin/`):
 - `UserManagement.jsx` - User CRUD operations
 - `UserForm.jsx` - User creation/editing form
 - `PermissionsManagement.jsx` - Role-based access control
 - `ApiKeyManagement.jsx` - API key lifecycle
-- `SystemSettings.jsx` - Global configuration
+- `SystemSettings.jsx` - Global configuration (integrations, AI settings)
+- `GenericCRUDManager.jsx` - Reusable CRUD interface for lookup tables
+- `FeedbackManagement.jsx` - User feedback collection and review
+- `AttributeFixedTextManagement.jsx` - Fixed text/descriptions management
+- `CorpBaseDefinitionsManagement.jsx` - CorpBase field definitions
+- `BusinessLineManager.jsx` - Business line management
+- `PlantCodesManager.jsx` - Plant codes management
+- `GPHManagement.jsx` - Global Product Hierarchy management
+- `WeightMatrixManagement.jsx` - Weight matrix configuration
+- `ParserKnowledgeManager.jsx` - Quality spec parser knowledge base
+- `HelpDocumentation.jsx` - In-app help documentation
+- `MARASearchPopup.jsx` - SAP MARA product search modal
+- `SimilarProductsPopup.jsx` - Similar products search modal
 
 **UI Components:**
 - `StatusBadge.jsx` - Colored status indicators
 - `PriorityBadge.jsx` - Priority level badges
 - `Layout.jsx` - Application frame with navigation
 - `Loading.jsx` - Loading state indicator
-- `SKUAssignment.jsx` - SKU base number assignment widget
-- `DynamicTicketView.jsx` - Template-based ticket data viewer
+- `TicketView.jsx` - Generic ticket view component
+- `MoleculeViewerRDKit.jsx` - RDKit molecular structure visualization
+
+**Badge Components** (`client/src/components/badges/`):
+- `ActiveStatusBadge.jsx` - Active/inactive status badge
+- `GenericBadge.jsx` - Reusable badge component
+- `PriorityBadge.jsx` - Priority level badges
+- `RoleBadge.jsx` - User role badges
+- `StatusBadge.jsx` - Ticket status badges
+
+**Common Components** (`client/src/components/common/`):
+- `FeedbackButton.jsx` - User feedback submission button
+- `FeedbackModal.jsx` - Feedback form modal
+- `LoadingSpinner.jsx` - Loading indicator component
+- `Modal.jsx` - Reusable modal wrapper
+
+**Dashboard Components** (`client/src/components/dashboard/`):
+- `BreakdownCharts.jsx` - Dashboard breakdown visualizations
+- `MetricModals.jsx` - Metric detail modals
+- `PerformanceMetricsRow.jsx` - Performance metrics display
+- `ProcessingTimesCard.jsx` - Processing time metrics
+- `StatusCardsGrid.jsx` - Status summary cards
+- `TicketTables.jsx` - Dashboard ticket tables
+
+**Collaboration Components** (`client/src/components/collaborations/`):
+- `AddCollaboratorModal.jsx` - Add collaborators to tickets
+- `CollaboratorList.jsx` - Display ticket collaborators
+
+**Modal Components** (`client/src/components/modals/`):
+- `CorpBaseModal.jsx` - CorpBase data modal
+- `ViewCorpBaseModal.jsx` - View CorpBase data modal
+- `SubmitConfirmationModal.jsx` - Ticket submission confirmation
+- `WebsitePreviewModal.jsx` - Website preview modal
+
+**Preview Components** (`client/src/components/preview/`):
+- `CorpBaseWebsitePreview.jsx` - CorpBase website preview
 
 **Template-Based Viewing Components:**
 
@@ -708,12 +872,13 @@ const getFieldValue = (fieldKey) => {
 
 **Custom Hooks** (`client/src/hooks/`):
 - `useFormConfig.js` - Fetches and caches form configuration
+- `useFormCache.js` - Form data caching for draft persistence
 
-**Context Providers** (`client/src/utils/`):
+**Context Providers** (`client/src/context/`):
 - `AuthContext.jsx` - Global authentication state management
   - Stores current profile (role, name, email, SBU)
   - Provides login/logout functions
-  - Injects authentication headers into API requests
+  - Injects authentication headers into API requests (x-user-role, x-user-firstname, x-user-lastname, x-user-email, x-user-sbu)
 
 #### 4.2.5 Services and Utilities
 
@@ -723,8 +888,18 @@ const getFieldValue = (fieldKey) => {
 - Response interceptor for error handling
 - Centralized API endpoint definitions
 
-**Utilities:**
+**Parser Configuration Service** (`client/src/services/parserConfigService.js`):
+- Quality spec parser configuration service
+- Manages parser knowledge base data
+
+**Utilities** (`client/src/utils/`):
 - `pricingCalculations.js` - Pricing formulas and calculations
+- `apiErrorHandler.js` - Centralized API error handling
+- `currencyUtils.js` - Currency formatting utilities
+- `dateFormatters.js` - Date formatting utilities
+- `errorLogger.js` - Error logging and tracking
+- `formValidationUtils.js` - Form validation helpers
+- `qualitySpecParser.js` - Quality specifications parsing logic
 
 ---
 
@@ -1011,6 +1186,67 @@ const ticket = await ProductTicket.findById(ticketId)
 - Dropdown population in forms
 - Product categorization and filtering
 - Reporting and analytics grouping
+
+#### 5.2.12 Feedback Collection
+
+**Purpose:** Stores user feedback for product improvement
+
+**Key Fields:**
+- `userId` - User reference (email)
+- `type` - Feedback type (bug, feature, improvement, other)
+- `category` - Feedback category (UI, functionality, performance, documentation)
+- `title` - Brief feedback title
+- `description` - Detailed feedback description
+- `priority` - Suggested priority (low, medium, high)
+- `status` - Processing status (new, in_review, planned, completed, dismissed)
+- `adminNotes` - Admin response/notes
+- `createdAt`, `updatedAt` - Timestamps
+
+**Use Cases:**
+- Collect user suggestions and bug reports
+- Track feedback resolution
+- Prioritize product improvements
+- Maintain communication with users
+
+#### 5.2.13 CorpBaseDefinitions Collection
+
+**Purpose:** Stores CorpBase product data field definitions and requirements
+
+**Key Fields:**
+- `fieldName` - CorpBase field identifier
+- `displayName` - Human-readable field name
+- `description` - Field description and purpose
+- `dataType` - Expected data type (string, number, boolean, array)
+- `required` - Whether field is required for CorpBase export
+- `maxLength` - Maximum character length (if applicable)
+- `validationRules` - Custom validation rules
+- `mappedTicketField` - Corresponding ProductTicket field path
+- `category` - Field category (basic, marketing, technical, regulatory)
+- `isActive` - Active status flag
+
+**Use Cases:**
+- Define CorpBase export requirements
+- Map ProductTicket fields to CorpBase fields
+- Validate CorpBase data before export
+- Admin configuration of CorpBase integration
+
+#### 5.2.14 AttributeFixedText Collection
+
+**Purpose:** Stores fixed text/descriptions for product attributes
+
+**Key Fields:**
+- `attributeCode` - Unique attribute identifier
+- `attributeName` - Attribute display name
+- `fixedText` - Standard text/description for the attribute
+- `category` - Attribute category
+- `language` - Language code (default: en)
+- `isActive` - Active status flag
+
+**Use Cases:**
+- Standardize product attribute descriptions
+- Populate fixed text fields automatically
+- Maintain consistency across products
+- Multi-language support (future)
 
 ### 5.3 Data Relationships
 
@@ -3104,7 +3340,7 @@ The architecture balances immediate business needs with long-term technical sust
 
 ---
 
-**Document Version:** 1.0
-**Last Updated:** 2025-10-21
+**Document Version:** 1.3.0
+**Last Updated:** 2026-01-07
 **Next Review:** Quarterly or after major architectural changes
 **Maintainer:** Development Team
