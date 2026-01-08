@@ -164,7 +164,6 @@ The Model layer defines the data structure and business rules using Mongoose sch
 - **WeightMatrix** - Package size to weight conversion for SKU variants
 - **ParserConfiguration** - Quality spec parser knowledge base
 - **Feedback** - User feedback collection and management
-- **CorpBaseDefinitions** - CorpBase product data requirements and field definitions
 - **AttributeFixedText** - Fixed text/descriptions for product attributes
 - **PlantCode** - Manufacturing facility codes and locations
 - **BusinessLine** - Product business line definitions
@@ -253,7 +252,6 @@ Controllers contain business logic and orchestrate operations between routes, mo
 **Lookup Table Controllers (CRUD operations):**
 - **plantCodeController** - Plant code CRUD operations
 - **businessLineController** - Business line CRUD operations
-- **corpbaseDefinitionsController** - CorpBase definitions CRUD
 - **attributeFixedTextController** - Fixed text management
 - **weightMatrixController** - Weight matrix management
 
@@ -261,7 +259,7 @@ Controllers contain business logic and orchestrate operations between routes, mo
 - **ticketCRUDController** - Create, read, update, delete operations
 - **integrationController** - External integrations (PubChem, SAP/Palantir, AI content generation)
 - **dashboardController** - Dashboard statistics and analytics
-- **exportController** - Excel export functionality (PDP, PIF, SAP Loader, CorpBase Loader)
+- **exportController** - Excel export functionality (PDP, PIF, SAP Loader)
 - **helpers** - Shared helper functions for product controllers
 
 **Note:** Permission management is handled directly in `server/routes/permissions.js`.
@@ -525,7 +523,6 @@ Routes define API endpoints and attach middleware/validation:
 - **businessLines.js** - Business line lookup endpoints
 - **productHierarchy.js** - Product hierarchy endpoints
 - **parserConfig.js** - Parser config endpoints
-- **corpbaseDefinitions.js** - CorpBase definitions endpoints
 - **attributeFixedText.js** - Attribute fixed text endpoints
 - **weightMatrix.js** - Weight matrix endpoints
 
@@ -649,7 +646,6 @@ Services encapsulate complex operations and external integrations:
 **Data Parsing Services:**
 - **csvParserUtils.js** - CSV parsing utilities
 - **attributeFixedTextParser.js** - Parsing fixed text definitions
-- **corpbaseDefinitionsParser.js** - Parsing CorpBase requirements
 - **productHierarchyParser.js** - Parsing product hierarchy data
 
 **Cache Service** (`cacheService.js`):
@@ -779,7 +775,6 @@ Top-level route components representing application views:
 - `GenericCRUDManager.jsx` - Reusable CRUD interface for lookup tables
 - `FeedbackManagement.jsx` - User feedback collection and review
 - `AttributeFixedTextManagement.jsx` - Fixed text/descriptions management
-- `CorpBaseDefinitionsManagement.jsx` - CorpBase field definitions
 - `BusinessLineManager.jsx` - Business line management
 - `PlantCodesManager.jsx` - Plant codes management
 - `GPHManagement.jsx` - Global Product Hierarchy management
@@ -1208,29 +1203,7 @@ const ticket = await ProductTicket.findById(ticketId)
 - Prioritize product improvements
 - Maintain communication with users
 
-#### 5.2.13 CorpBaseDefinitions Collection
-
-**Purpose:** Stores CorpBase product data field definitions and requirements
-
-**Key Fields:**
-- `fieldName` - CorpBase field identifier
-- `displayName` - Human-readable field name
-- `description` - Field description and purpose
-- `dataType` - Expected data type (string, number, boolean, array)
-- `required` - Whether field is required for CorpBase export
-- `maxLength` - Maximum character length (if applicable)
-- `validationRules` - Custom validation rules
-- `mappedTicketField` - Corresponding ProductTicket field path
-- `category` - Field category (basic, marketing, technical, regulatory)
-- `isActive` - Active status flag
-
-**Use Cases:**
-- Define CorpBase export requirements
-- Map ProductTicket fields to CorpBase fields
-- Validate CorpBase data before export
-- Admin configuration of CorpBase integration
-
-#### 5.2.14 AttributeFixedText Collection
+#### 5.2.13 AttributeFixedText Collection
 
 **Purpose:** Stores fixed text/descriptions for product attributes
 

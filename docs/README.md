@@ -83,11 +83,9 @@ Welcome to the NPDI (New Product Development & Introduction) Portal documentatio
 - **Palantir Foundry Integration**: Query SAP MARA data stored in Palantir Foundry datasets
 - **Similar Products Search**: Find related products by CAS number
 - **Quality Spec Parser**: Natural language to structured data conversion
-- **AI Content Generation**: Azure OpenAI for CorpBase product descriptions
+- **AI Content Generation**: Azure OpenAI for product descriptions
 - **Teams Notifications**: Webhook notifications for ticket events
 - **SAP MDG-M Loader Export**: Generate SAP Material Master Data loader files
-- **CorpBase Batch Client Export**: Generate CorpBase loader files for Sigma-Aldrich website
-- **CorpBase Website Preview**: Live preview of product pages as they will appear on sigmaaldrich.com
 - **Excel Export**: PDP Checklists and Product Information Forms
 - **Structured Logging**: Daily rotation with log levels
 

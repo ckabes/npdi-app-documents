@@ -38,9 +38,6 @@ A New Product Development and Introduction (NPDI) ticket initiation application 
 
 ### SAP & CorpBase Integration
 - **SAP MDG-M Loader Export**: Generate SAP Material Master Data loader files
-- **CorpBase Batch Client Export**: Generate CorpBase loader files for Sigma-Aldrich website
-- **CorpBase Website Preview**: Live preview of product pages as they will appear on sigmaaldrich.com
-- **CorpBase Definitions Management**: Admin UI for managing CorpBase field definitions
 - **Attribute Fixed Text Management**: Admin UI for SAP attribute fixed text values
 
 ### Additional Features
@@ -52,8 +49,8 @@ A New Product Development and Introduction (NPDI) ticket initiation application 
 - **User Preferences**: Customizable dashboard layouts and notification settings
 - **System Settings**: Configurable security policies and integrations
 - **Microsoft Teams Integration**: Webhook notifications for ticket events
-- **AI Content Generation**: Azure OpenAI for CorpBase product descriptions
-- **Data Export**: Excel export for PDP Checklists, PIF forms, and SAP/CorpBase loaders
+- **AI Content Generation**: Azure OpenAI for product descriptions
+- **Data Export**: Excel export for PDP Checklists, PIF forms, and SAP loaders
 - **Structured Logging**: File-based logging with daily rotation
 
 ## Tech Stack
@@ -128,10 +125,8 @@ npdi-app/
 │   │   ├── dataExportService.js     # Excel exports
 │   │   ├── pdpChecklistExportService.js  # PDP Checklist Excel export
 │   │   ├── pifExportService.js      # Product Information Form export
-│   │   ├── sapExport/               # SAP MDG-M loader generation
-│   │   │   └── sapLoaderGenerator.js
-│   │   └── corpbaseExport/          # CorpBase Batch Client generation
-│   │       └── corpbaseLoaderGenerator.js
+│   │   └── sapExport/               # SAP MDG-M loader generation
+│   │       └── sapLoaderGenerator.js
 │   ├── utils/                       # Helper utilities
 │   │   ├── logger.js                # Custom logging system
 │   │   ├── enumCleaner.js           # Enum validation
@@ -149,7 +144,6 @@ npdi-app/
 │       │   │   ├── GenericCRUDManager.jsx
 │       │   │   ├── ParserKnowledgeManager.jsx
 │       │   │   ├── FeedbackManagement.jsx
-│       │   │   ├── CorpBaseDefinitionsManagement.jsx
 │       │   │   ├── AttributeFixedTextManagement.jsx
 │       │   │   ├── WeightMatrixManagement.jsx
 │       │   │   └── SimilarProductsPopup.jsx
@@ -168,10 +162,7 @@ npdi-app/
 │       │   │   ├── QualitySpecificationsForm.jsx
 │       │   │   ├── CorpBaseDataForm.jsx
 │       │   │   └── SectionNavigator.jsx
-│       │   ├── preview/             # Preview components
-│       │   │   └── CorpBaseWebsitePreview.jsx
 │       │   ├── modals/              # Modal components
-│       │   │   └── CorpBaseModal.jsx
 │       │   ├── TicketView.jsx       # Template-driven ticket viewer
 │       │   └── MoleculeViewerRDKit.jsx
 │       ├── pages/                   # Page components
@@ -300,7 +291,6 @@ PALANTIR_CLIENT_SECRET=your-client-secret
 - `GET /api/products/:id/export-pdp` - Export PDP Checklist
 - `GET /api/products/:id/export-pif` - Export Product Information Form
 - `GET /api/products/:id/export-sap-loader` - Export SAP MDG-M Loader
-- `GET /api/products/:id/export-corpbase-loader` - Export CorpBase Batch Client
 
 ### Integration Endpoints
 - `GET /api/products/cas-lookup/:casNumber` - PubChem CAS lookup

@@ -1117,27 +1117,6 @@ curl -H "x-user-role: PM_OPS" \
 - Includes all SKU variants as separate rows
 - See `docs/analysis/SAP_LOADER_FIELD_MAPPING_ANALYSIS.md` for field mapping details
 
-#### 5.5 Export CorpBase Batch Client Loader File
-
-**Endpoint:** `GET /api/products/:id/export-corpbase-loader`
-
-**Description:** Generates a CorpBase Batch Client loader file for import into the Sigma-Aldrich website content management system.
-
-**Response Type:** `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` (Excel)
-
-**Example Request:**
-```bash
-curl -H "x-user-role: PM_OPS" \
-  "http://localhost:5000/api/products/507f1f77bcf86cd799439011/export-corpbase-loader" \
-  --output CorpBase-Loader.xlsx
-```
-
-**Notes:**
-- Generates file formatted for CorpBase Batch Client import
-- Includes product descriptions, specifications, and web content
-- Maps NPDI corpbaseData fields to CorpBase format
-- Supports HTML content for product descriptions
-
 ---
 
 ### 6. Integration Endpoints
@@ -1244,9 +1223,12 @@ The SAP MARA data search queries a Palantir Foundry dataset using async SQL quer
 
 ## Changelog
 
+### Version 1.4.0 (2026-01-07)
+- Removed CorpBase Batch Client Loader export endpoint
+- Removed CorpBase Definitions management endpoints
+
 ### Version 1.3.0 (2025-12-13)
 - Added SAP MDG-M Loader export endpoint (`/export-sap-loader`)
-- Added CorpBase Batch Client Loader export endpoint (`/export-corpbase-loader`)
 - Added CorpBase Substance ID lookup endpoint (`/lookup-corpbase-substance`)
 - Updated documentation structure with new Integration Endpoints section
 

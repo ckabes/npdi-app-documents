@@ -102,7 +102,6 @@ The NPDI Portal uses the following MongoDB collections:
 | `producthierarchies` | ProductHierarchy | SIAL product hierarchy classifications |
 | `weightmatrices` | WeightMatrix | Package size to weight conversion data |
 | `permissions` | Permission | Role-based access control definitions |
-| `corpbasedefinitions` | CorpBaseDefinitions | CorpBase product field definitions and requirements |
 | `attributefixedtexts` | AttributeFixedText | Fixed text/descriptions for product attributes |
 
 ### User Feedback
@@ -669,7 +668,6 @@ const cleanTicketData = (ticketData) => {
 | `server/models/ApiKey.js` | API key management |
 | `server/models/ParserConfiguration.js` | Quality parser knowledge base |
 | `server/models/Feedback.js` | User feedback collection |
-| `server/models/CorpBaseDefinitions.js` | CorpBase field definitions |
 | `server/models/AttributeFixedText.js` | Fixed text for product attributes |
 | `server/models/PlantCode.js` | Manufacturing plant codes |
 | `server/models/BusinessLine.js` | Business line definitions |

@@ -43,12 +43,12 @@ This document provides a comprehensive inventory of all public documentation ava
    - Added internal/ folder to documentation structure
    - Updated Key Features Summary with SAP/CorpBase features
 
-3. **API_DOCUMENTATION.md** - Updated to version 1.3.0:
+3. **API_DOCUMENTATION.md** - Updated to version 1.4.0:
    - Added Section 5.4: Export SAP MDG-M Loader File endpoint
-   - Added Section 5.5: Export CorpBase Batch Client Loader endpoint
    - Added Section 6: Integration Endpoints (CorpBase Substance ID Lookup)
    - Renumbered Admin Endpoints to Section 7
-   - Added changelog entry for version 1.3.0
+   - Removed CorpBase Batch Client Loader export endpoint (v1.4.0)
+   - Updated changelog
 
 4. **Claude Attribution Removed** from 3 documents:
    - `docs/api/CHANGELOG_API_KEYS.md` - Changed to "NPDI Development Team"
