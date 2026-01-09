@@ -355,18 +355,6 @@ All AI requests logged with:
    - Consider simpler prompts
    - Reduce max_tokens setting
 
-## Future Enhancements
-
-Potential improvements:
-- [ ] Batch generation for multiple products
-- [ ] Content quality scoring
-- [ ] A/B testing different prompts
-- [ ] Multi-language support
-- [ ] Custom model fine-tuning
-- [ ] Cost tracking per request
-- [ ] Content versioning
-- [ ] Approval workflow
-
 ## Support
 
 For issues or questions:

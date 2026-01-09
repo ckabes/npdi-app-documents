@@ -544,15 +544,6 @@ React Hook Form - Save to ticket
 3. **Language**: Only English is supported
 4. **Customization**: Normalization dictionaries are currently hardcoded
 
-### Future Enhancements (Potential)
-
-- [ ] User-customizable normalization dictionaries
-- [ ] Specification templates for common product types
-- [ ] Import from Excel/CSV
-- [ ] Export specifications for reuse
-- [ ] Multi-language support
-- [ ] Pattern learning from user corrections
-
 ---
 
 ## Best Practices

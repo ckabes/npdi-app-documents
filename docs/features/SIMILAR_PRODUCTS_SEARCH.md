@@ -273,16 +273,6 @@ Configured via System Settings admin panel:
 - Verify imported data fits product context
 - Use "Load More" only when needed
 
-## Future Enhancements
-
-Potential improvements for future releases:
-- Search by other identifiers (IUPAC name, synonyms)
-- Advanced filtering options (material type, division)
-- Side-by-side comparison of selected products
-- Field-level import control (select specific fields)
-- History tracking of imported products
-- Export similar products list
-
 ## Troubleshooting
 
 ### Common Issues

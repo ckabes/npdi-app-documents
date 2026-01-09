@@ -219,11 +219,3 @@ Server logs show detailed query execution:
 [Plant Codes] Inserting new plant codes...
 [Plant Codes] ✓ Successfully inserted 247 plant codes
 ```
-
-## Future Enhancements
-
-- [ ] Scheduled automatic rebuilds (daily/weekly)
-- [ ] Incremental updates (detect changes only)
-- [ ] Plant code validation rules
-- [ ] Multi-dataset support
-- [ ] Export to Excel/CSV functionality

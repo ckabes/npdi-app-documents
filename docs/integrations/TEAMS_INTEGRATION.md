@@ -155,15 +155,6 @@ For development/testing without a real Teams channel, you can use:
 - **No authentication required**: The webhook URL itself is the authentication mechanism
 - **Rate limiting**: Teams may rate-limit excessive webhook calls
 
-## Future Enhancements
-
-Potential improvements for future versions:
-- **User-specific notifications**: Send notifications to individual users via Teams chat
-- **Actionable buttons**: Add buttons to approve/reject tickets directly from Teams
-- **Mention users**: @mention specific team members in notifications
-- **Custom message templates**: Allow customization of notification messages
-- **Microsoft Graph API**: Full Teams bot integration for two-way communication
-
 ## Support
 
 For issues with Teams integration:

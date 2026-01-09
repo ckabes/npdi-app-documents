@@ -143,13 +143,6 @@ When making changes to a template, follow this checklist:
 | DM1-CHEM-1.10.0 | Chemistry | 1.10.0 | Standard chemical product tickets | Active (Default) |
 | AS6-BIOLOGIC-1.0.0 | Biologics | 1.0.0 | Biological product tickets | Active |
 
-### Future Templates (Planned)
-
-| Template Name | Type | Description |
-|--------------|------|-------------|
-| DM1-INSTR-1.0.0 | Instruments | Laboratory instrument tickets |
-| DM1-MAT-1.0.0 | Materials | General materials tickets |
-
 ## Version History
 
 ### DM1-CHEM-1.10.0 (Current)
