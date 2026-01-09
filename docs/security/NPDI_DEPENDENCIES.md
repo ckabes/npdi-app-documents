@@ -6,7 +6,7 @@ This document provides a comprehensive inventory of external dependencies used i
 
 **Document Date:** 2026-01-09
 **Application:** MilliporeSigma NPDI Application
-**Version:** 2.0
+**Version:** 2.1
 
 ---
 
@@ -16,41 +16,48 @@ This document provides a comprehensive inventory of external dependencies used i
 
 | Package | Version | Category | Purpose | Data Access |
 |---------|---------|----------|---------|-------------|
-| express | ^4.18.2 | Web Framework | HTTP server and routing | Request/Response handling only |
-| mongoose | ^7.5.0 | Database ODM | MongoDB object modeling | Direct database access |
-| axios | ^1.11.0 | HTTP Client | External API calls (PubChem) | No database access |
+| express | ^5.2.1 | Web Framework | HTTP server and routing | Request/Response handling only |
+| mongoose | ^9.0.1 | Database ODM | MongoDB object modeling | Direct database access |
+| axios | ^1.13.2 | HTTP Client | External API calls (PubChem, Palantir) | No database access |
 | cors | ^2.8.5 | Security Middleware | Cross-origin resource sharing | No data access |
-| helmet | ^7.0.0 | Security Middleware | HTTP security headers | No data access |
-| express-rate-limit | ^6.10.0 | Security Middleware | API rate limiting | No data access |
-| express-validator | ^7.0.1 | Validation | Input validation and sanitization | No data access |
-| compression | ^1.7.4 | Performance | HTTP response compression | No data access |
-| dotenv | ^16.3.1 | Configuration | Environment variable management | No data access |
+| helmet | ^8.1.0 | Security Middleware | HTTP security headers | No data access |
+| express-rate-limit | ^8.2.1 | Security Middleware | API rate limiting | No data access |
+| express-validator | ^7.3.1 | Validation | Input validation and sanitization | No data access |
+| compression | ^1.8.1 | Performance | HTTP response compression | No data access |
+| dotenv | ^17.2.3 | Configuration | Environment variable management | No data access |
+| exceljs | ^4.4.0 | File Generation | Excel file creation (exports) | No database access |
+| multer | ^2.0.2 | File Upload | Multipart form data handling | No database access |
+| nodemailer | ^7.0.11 | Email | SMTP email notifications | No database access |
+| apache-arrow | ^21.1.0 | Data Format | Arrow format for Palantir queries | No database access |
+| csv-parser | ^3.2.0 | File Parsing | CSV file parsing | No database access |
 
 ### 1.2 Frontend Dependencies (Production)
 
 | Package | Version | Category | Purpose | Data Access |
 |---------|---------|----------|---------|-------------|
-| react | ^18.2.0 | UI Framework | User interface rendering | No backend access |
-| react-dom | ^18.2.0 | UI Framework | DOM rendering | No backend access |
-| react-router-dom | ^6.15.0 | Routing | Client-side routing | No backend access |
-| axios | ^1.5.0 | HTTP Client | API communication | API calls only |
-| react-hook-form | ^7.45.4 | Form Management | Form state management | Client-side only |
-| react-hot-toast | ^2.4.1 | UI Component | Toast notifications | Client-side only |
-| @headlessui/react | ^1.7.17 | UI Components | Accessible UI components | Client-side only |
-| @heroicons/react | ^2.0.18 | UI Assets | Icon library | Static assets only |
-| date-fns | ^2.30.0 | Utility | Date formatting and manipulation | Client-side only |
-| clsx | ^2.0.0 | Utility | CSS class utilities | Client-side only |
-| tailwind-merge | ^1.14.0 | Utility | Tailwind class merging | Client-side only |
+| react | ^19.2.1 | UI Framework | User interface rendering | No backend access |
+| react-dom | ^19.2.1 | UI Framework | DOM rendering | No backend access |
+| react-router-dom | ^7.10.1 | Routing | Client-side routing | No backend access |
+| axios | ^1.13.2 | HTTP Client | API communication | API calls only |
+| react-hook-form | ^7.68.0 | Form Management | Form state management | Client-side only |
+| react-hot-toast | ^2.6.0 | UI Component | Toast notifications | Client-side only |
+| @heroicons/react | ^2.2.0 | UI Assets | Icon library | Static assets only |
+| react-markdown | ^10.1.0 | Content Rendering | Markdown to HTML rendering | Client-side only |
+| remark-gfm | ^4.0.1 | Markdown Plugin | GitHub Flavored Markdown support | Client-side only |
 
 ### 1.3 Development Dependencies
 
-| Package | Category | Purpose | Production Deployment |
-|---------|----------|---------|----------------------|
-| tailwindcss | CSS Framework | Build-time CSS generation | Not deployed - build-time only |
-| vite | Build Tool | Frontend bundling and dev server | Not deployed |
-| nodemon | Development | Auto-restart server on changes | Not deployed |
-| eslint | Code Quality | Static code analysis | Not deployed |
-| concurrently | Development | Run multiple dev commands | Not deployed |
+| Package | Version | Category | Purpose | Production Deployment |
+|---------|---------|----------|---------|----------------------|
+| tailwindcss | ^4.1.17 | CSS Framework | Build-time CSS generation | Not deployed - build-time only |
+| @tailwindcss/postcss | ^4.1.17 | CSS Processing | PostCSS plugin for Tailwind | Not deployed - build-time only |
+| postcss | ^8.5.6 | CSS Processing | CSS transformations | Not deployed - build-time only |
+| vite | ^7.2.6 | Build Tool | Frontend bundling and dev server | Not deployed |
+| @vitejs/plugin-react | ^5.1.1 | Build Plugin | React support for Vite | Not deployed |
+| nodemon | ^3.1.11 | Development | Auto-restart server on changes | Not deployed |
+| eslint | ^9.39.1 | Code Quality | Static code analysis | Not deployed |
+| concurrently | ^9.2.1 | Development | Run multiple dev commands | Not deployed |
+| xlsx | ^0.18.5 | File Parsing | Excel file parsing (dev/import) | Not deployed |
 
 ---
 
@@ -271,16 +278,16 @@ export default {
 - No automatic data submission
 - Server-side validation implemented separately
 
-### 5.5 UI Component Libraries (@headlessui/react, @heroicons/react)
-- Presentation components only
+### 5.5 Icon Library (@heroicons/react)
+- Static SVG icon components
 - No data processing
 - No network access
 
-### 5.6 Utility Libraries (date-fns, clsx, tailwind-merge)
-- Pure functions
+### 5.6 Markdown Rendering (react-markdown, remark-gfm)
+- Converts markdown text to React components
+- GitHub Flavored Markdown support (tables, task lists)
+- Client-side rendering only
 - No network access
-- No data persistence
-- Client-side computations only
 
 ---
 
@@ -410,9 +417,9 @@ async function authenticateApiKey(req, res, next) {
 ```json
 {
   "dependencies": {
-    "express": "^4.18.2",
-    "mongoose": "^7.5.0",
-    "helmet": "^7.0.0"
+    "express": "^5.2.1",
+    "mongoose": "^9.0.1",
+    "helmet": "^8.1.0"
   }
 }
 ```
@@ -428,14 +435,14 @@ async function authenticateApiKey(req, res, next) {
 {
   "dependencies": {
     // Deployed to production
-    "express": "^4.18.2",
-    "mongoose": "^7.5.0"
+    "express": "^5.2.1",
+    "mongoose": "^9.0.1"
   },
   "devDependencies": {
     // Not deployed to production
-    "tailwindcss": "^3.3.3",
-    "vite": "^4.4.5",
-    "nodemon": "^3.0.1"
+    "tailwindcss": "^4.1.17",
+    "vite": "^7.2.6",
+    "nodemon": "^3.1.11"
   }
 }
 ```
@@ -456,12 +463,15 @@ npm install --production
 | Web Framework | Express | None | Backend |
 | Security Middleware | Helmet, CORS, Rate-Limit, Validator | None | Backend |
 | HTTP Client | Axios | None | Backend + Frontend |
-| UI Framework | React, React-DOM | None | Frontend (browser) |
-| UI Components | Headless UI, Heroicons | None | Frontend (browser) |
-| Utilities | date-fns, clsx | None | Frontend (browser) |
-| CSS Framework | Tailwind CSS | None | Build-time only |
-| Build Tools | Vite, PostCSS | None | Development only |
-| Dev Tools | nodemon, eslint | None | Development only |
+| File Processing | ExcelJS, Multer, csv-parser, apache-arrow | None | Backend |
+| Email | Nodemailer | None | Backend |
+| UI Framework | React, React-DOM, React-Router-DOM | None | Frontend (browser) |
+| UI Components | Heroicons, react-hot-toast | None | Frontend (browser) |
+| Content Rendering | react-markdown, remark-gfm | None | Frontend (browser) |
+| Form Management | react-hook-form | None | Frontend (browser) |
+| CSS Framework | Tailwind CSS, PostCSS | None | Build-time only |
+| Build Tools | Vite, @vitejs/plugin-react | None | Development only |
+| Dev Tools | nodemon, eslint, concurrently | None | Development only |
 
 ---
 
@@ -487,6 +497,6 @@ npm install --production
 
 ---
 
-**Document Version:** 2.0
+**Document Version:** 2.1
 **Last Updated:** 2026-01-09
 **Prepared By:** NPDI Development Team
