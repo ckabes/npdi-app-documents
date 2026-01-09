@@ -46,7 +46,7 @@ Welcome to the NPDI (New Product Development & Introduction) Portal documentatio
 
 ### Security
 - [API Key Storage](security/API_KEY_STORAGE.md) - How API keys are encrypted and stored
-- [Dependency Security Assessment](security/DEPENDENCY_SECURITY_ASSESSMENT.md) - Security analysis of dependencies
+- [NPDI Dependencies](security/NPDI_DEPENDENCIES.md) - Application dependency inventory and characteristics
 
 ### Analysis
 - [SAP Loader Field Mapping Analysis](analysis/SAP_LOADER_FIELD_MAPPING_ANALYSIS.md) - SAP MDG-M field mapping
@@ -127,11 +127,9 @@ docs/
 │   └── TEAMS_INTEGRATION.md          # Teams webhooks
 ├── security/                         # Security documentation
 │   ├── API_KEY_STORAGE.md            # API key security
-│   └── DEPENDENCY_SECURITY_ASSESSMENT.md
-├── analysis/                         # Analysis documents
-│   └── SAP_LOADER_FIELD_MAPPING_ANALYSIS.md
-└── internal/                         # Internal documentation
-    └── DOCUMENTATION_INVENTORY.md    # Documentation inventory
+│   └── NPDI_DEPENDENCIES.md          # Dependency inventory
+└── analysis/                         # Analysis documents
+    └── SAP_LOADER_FIELD_MAPPING_ANALYSIS.md
 ```
 
 ---
