@@ -145,7 +145,7 @@ Required fields:
 - ✅ **Enable:** Palantir Foundry integration must be enabled
 - ✅ **Personal Token:** Valid Palantir API token
 - ✅ **Dataset RID:** Resource ID for SAP MARA dataset (e.g., `ri.foundry.main.dataset.xxx`)
-- Optional **Hostname:** Default is `merckgroup.palantirfoundry.com`
+- Optional **Hostname:** Default is `palantir.mcloud.merckgroup.com`
 - Optional **Timeout:** Default is 30 seconds
 
 ### Testing Connection
