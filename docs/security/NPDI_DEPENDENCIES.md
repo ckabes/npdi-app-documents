@@ -6,7 +6,7 @@ This document provides a comprehensive inventory of external dependencies used i
 
 **Document Date:** 2026-01-09
 **Application:** MilliporeSigma NPDI Application
-**Version:** 2.1
+**Version:** 2.2
 
 ---
 
@@ -58,6 +58,19 @@ This document provides a comprehensive inventory of external dependencies used i
 | eslint | ^9.39.1 | Code Quality | Static code analysis | Not deployed |
 | concurrently | ^9.2.1 | Development | Run multiple dev commands | Not deployed |
 | xlsx | ^0.18.5 | File Parsing | Excel file parsing (dev/import) | Not deployed |
+
+### 1.4 Data Access Terminology
+
+The "Data Access" column uses the following distinctions:
+
+| Term | Meaning |
+|------|---------|
+| **Direct database access** | Reads from and writes to MongoDB |
+| **No database access** | Does not interact with MongoDB, but may handle other data (files, external APIs, emails) |
+| **No data access** | Does not interact with any application data; configuration or middleware only |
+| **No backend access** | Frontend-only; cannot directly reach server or database |
+| **Client-side only** | Executes in browser sandbox; no server interaction |
+| **API calls only** | Communicates with backend via HTTP endpoints |
 
 ---
 
@@ -497,6 +510,6 @@ npm install --production
 
 ---
 
-**Document Version:** 2.1
+**Document Version:** 2.2
 **Last Updated:** 2026-01-09
 **Prepared By:** NPDI Development Team
